@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智慧通勤與數據監控中心</title>
+  <!-- Tailwind CSS: 實現手機/平板/桌機全自動 RWD 排版 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js: 圖表視覺化函式庫 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans">
+
+  <!-- 導航列 (RWD 彈性排版) -->
+  <nav class="bg-indigo-700 text-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center space-x-2">
+          <span class="text-xl font-bold tracking-wide">🚲 Smart Commute & Data Hub</span>
+        </div>
+        <div class="flex space-x-4 text-sm font-medium">
+          <a href="#news" class="hover:bg-indigo-600 px-3 py-2 rounded-md transition">最新消息</a>
+          <a href="#charts" class="hover:bg-indigo-600 px-3 py-2 rounded-md transition">數據圖表</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 主內容容器 -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    
+    <!-- 1. 最新消息區塊 (News Section) -->
+    <section id="news" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+          📢 最新消息與系統公告
+        </h2>
+        <span class="text-xs bg-indigo-100 text-indigo-800 font-semibold px-2.5 py-0.5 rounded">即時資訊</span>
+      </div>
+
+      <!-- RWD 卡片排版：手機單欄、平板雙欄、桌機三欄 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        
+        <!-- 消息卡片 1 -->
+        <div class="p-4 border border-slate-200 rounded-lg hover:shadow-md transition bg-slate-50/50">
+          <div class="flex justify-between items-center text-xs text-slate-500 mb-2">
+            <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-medium">系統升級</span>
+            <span>2026-09-21</span>
+          </div>
+          <h3 class="text-base font-semibold text-slate-900 mb-1">智慧通勤通知系統就緒</h3>
+          <p class="text-sm text-slate-600">已串接氣象署即時天氣、降雨機率及環境部 AQI 資料，並透過 GitHub Actions 於每日上班前準時推播。</p>
+        </div>
+
+        <!-- 消息卡片 2 -->
+        <div class="p-4 border border-slate-200 rounded-lg hover:shadow-md transition bg-slate-50/50">
+          <div class="flex justify-between items-center text-xs text-slate-500 mb-2">
+            <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-medium">資料庫介面</span>
+            <span>2026-09-20</span>
+          </div>
+          <h3 class="text-base font-semibold text-slate-900 mb-1">預留 MySQL 非同步接口</h3>
+          <p class="text-sm text-slate-600">前端圖表採用標準 RESTful JSON 結構設計，後續完成 MySQL API 後，只需替換 Fetch URL 即可自動呈現資料。</p>
+        </div>
+
+        <!-- 消息卡片 3 -->
+        <div class="p-4 border border-slate-200 rounded-lg hover:shadow-md transition bg-slate-50/50">
+          <div class="flex justify-between items-center text-xs text-slate-500 mb-2">
+            <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-medium">響應式體驗</span>
+            <span>2026-09-19</span>
+          </div>
+          <h3 class="text-base font-semibold text-slate-900 mb-1">全平台螢幕自適應</h3>
+          <p class="text-sm text-slate-600">不論是行動裝置、平板電腦或高解析度桌面顯示器，圖表與文字版面皆能自動縮放與換行排列。</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2. 圖表分析區塊 (Charts Section) -->
+    <section id="charts" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-slate-100 pb-3 gap-2">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+            📈 數據視覺化圖表
+          </h2>
+          <p class="text-xs text-slate-500 mt-1">目前載入展示數據；已預留 API 函式介面，未來可無縫切換至 MySQL 資料庫。</p>
+        </div>
+        <button id="refreshBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5 self-end sm:self-auto">
+          <span>🔄</span> 重新整理圖表
+        </button>
+      </div>
+
+      <!-- RWD 圖表容器：桌機兩欄並排，手機單欄堆疊 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- 圖表 1：折線圖 -->
+        <div class="border border-slate-200 rounded-xl p-4 bg-white shadow-sm">
+          <h3 class="text-sm font-semibold text-slate-700 mb-3">通勤氣溫與指標趨勢（折線圖）</h3>
+          <div class="relative w-full h-64 sm:h-80">
+            <canvas id="lineChart"></canvas>
+          </div>
+        </div>
+
+        <!-- 圖表 2：長條圖 -->
+        <div class="border border-slate-200 rounded-xl p-4 bg-white shadow-sm">
+          <h3 class="text-sm font-semibold text-slate-700 mb-3">警示事件觸發統計（長條圖）</h3>
+          <div class="relative w-full h-64 sm:h-80">
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="text-center py-6 text-xs text-slate-400">
+    © 2026 Smart Commute System. Hosted with GitHub Pages.
+  </footer>
+
+  <!-- 前端資料處理與圖表繪製腳本 -->
+  <script>
+    // ========================================================
+    // 1. 未來連接 MySQL 的資料介面 (REST API 預留函式)
+    // ========================================================
+    async function fetchDatabaseData() {
+      /*
+        【未來串接 MySQL 指南】：
+        當你建立好後端 API (例如 Python FastAPI, Flask 或 Node.js Express)
+        並連上 MySQL 資料庫後，將下方註解解除，替換為實際 API 網址：
+
+        try {
+          const response = await fetch("https://your-backend-service.com/api/commute-stats");
+          if (!response.ok) throw new Error("網路請求失敗");
+          const dbData = await response.json();
+          return dbData;
+        } catch (error) {
+          console.error("無法從 MySQL 資料庫取得資料:", error);
+        }
+      */
+
+      // 目前提供模擬資料（其結構對應從 MySQL SELECT 查詢後的 JSON 輸出）
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            months: ["5月", "6月", "7月", "8月", "9月", "10月"],
+            temperatures: [28.2, 31.5, 34.0, 33.8, 30.2, 26.5],
+            alertCategories: ["正常通勤", "雨傘提醒", "高溫防曬", "口罩提醒"],
+            alertCounts: [42, 16, 11, 7]
+          });
+        }, 150);
+      });
+    }
+
+    // ========================================================
+    // 2. Chart.js 圖表渲染與生命週期控制
+    // ========================================================
+    let lineChartInstance = null;
+    let barChartInstance = null;
+
+    async function renderCharts() {
+      const data = await fetchDatabaseData();
+
+      // 若已有圖表實體則先銷毀，避免重複繪製重疊
+      if (lineChartInstance) lineChartInstance.destroy();
+      if (barChartInstance) barChartInstance.destroy();
+
+      // 折線圖實例化
+      const ctxLine = document.getElementById('lineChart').getContext('2d');
+      lineChartInstance = new Chart(ctxLine, {
+        type: 'line',
+        data: {
+          labels: data.months,
+          datasets: [{
+            label: '平均最高溫 (°C)',
+            data: data.temperatures,
+            borderColor: '#4f46e5',
+            backgroundColor: 'rgba(79, 70, 229, 0.1)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2,
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: false }
+          }
+        }
+      });
+
+      // 長條圖實例化
+      const ctxBar = document.getElementById('barChart').getContext('2d');
+      barChartInstance = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+          labels: data.alertCategories,
+          datasets: [{
+            label: '觸發累積次數',
+            data: data.alertCounts,
+            backgroundColor: [
+              'rgba(16, 185, 129, 0.75)', // 綠色
+              'rgba(59, 130, 246, 0.75)',  // 藍色
+              'rgba(245, 158, 11, 0.75)',  // 橙色
+              'rgba(239, 68, 68, 0.75)'    // 紅色
+            ],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    // 頁面初始化與按鈕重新載入事件
+    document.addEventListener('DOMContentLoaded', renderCharts);
+    document.getElementById('refreshBtn').addEventListener('click', renderCharts);
+  </script>
+</body>
+</html>
