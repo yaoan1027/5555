@@ -50,6 +50,7 @@ def fetch_weather_data(api_key: str, location_name: str = "臺北市"):
 def fetch_aqi_data(api_key: str, sitename: str = "中山"):
     """
     串接環境部空氣品質指標 (AQI) API (aqx_p_432)
+    相容 dict 與 list 兩種回傳格式
     """
     url = "https://data.moenv.gov.tw/api/v2/aqx_p_432"
     params = {
@@ -63,16 +64,26 @@ def fetch_aqi_data(api_key: str, sitename: str = "中山"):
     if resp.status_code != 200:
         raise Exception(f"環境部 AQI API 請求失敗，HTTP {resp.status_code}: {resp.text}")
         
-    records = resp.json().get("records", [])
+    data = resp.json()
+
+    # 關鍵修正：判斷回傳是 list 還是包含 records 的 dict
+    if isinstance(data, list):
+        records = data
+    elif isinstance(data, dict):
+        records = data.get("records", [])
+    else:
+        records = []
+
     for rec in records:
         if rec.get("sitename") == sitename:
             aqi_val = rec.get("aqi")
-            return int(aqi_val) if aqi_val and aqi_val.isdigit() else 0
+            return int(aqi_val) if aqi_val and str(aqi_val).isdigit() else 0
             
-    if records and records[0].get("aqi", "").isdigit():
+    # 若無精確站點匹配，退回抓取第一筆有效站點
+    if records and str(records[0].get("aqi", "")).isdigit():
         return int(records[0]["aqi"])
+        
     return 0
-
 def generate_commute_alert(location: str, max_temp: float, max_pop: int, aqi: int) -> str:
     suggestions = []
 
